@@ -5,7 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const connectDB = require('./src/config/db.js');
-
+const authRoutes = require('./src/routes/authRoutes');
 const app = express();
 const server = http.createServer(app);
 
@@ -14,6 +14,7 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api/auth', authRoutes);
 
 
 
