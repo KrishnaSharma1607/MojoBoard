@@ -3,7 +3,7 @@ import rough from "roughjs/bin/rough";
 
 const gen = rough.generator();
 
-export const createRoughElement = (
+export const createElement = (
   id,
   x1,
   y1,
