@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import classes from "./index.module.css";
 import cx from "classnames";
@@ -14,40 +14,42 @@ import {
   FaDownload,
 } from "react-icons/fa";
 import { LuRectangleHorizontal } from "react-icons/lu";
+import { TOOL_ITEMS } from "../../constants";
+import boardContext from "../../store/board-context";
 
 const Toolbar = () => {
-  const [activeToolItem, setActiveToolItem] = useState("A");
+  const { activeToolItem, changeToolHandler } = useContext(boardContext);
   return (
     <div className={classes.container}>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "A",
+          [classes.active]: activeToolItem === TOOL_ITEMS.LINE,
         })}
-        onClick={() => setActiveToolItem("A")}
+        onClick={() => changeToolHandler(TOOL_ITEMS.LINE)}
       >
         <FaSlash />
       </div>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "B",
+          [classes.active]: activeToolItem === TOOL_ITEMS.RECTANGLE,
         })}
-        onClick={() => setActiveToolItem("B")}
+        onClick={() => changeToolHandler(TOOL_ITEMS.RECTANGLE)}
       >
-        <FaRegCircle />
+        <LuRectangleHorizontal />
       </div>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "E",
+          [classes.active]: activeToolItem === TOOL_ITEMS.TEXT,
         })}
-        onClick={() => setActiveToolItem("E")}
+        onClick={() => changeToolHandler(TOOL_ITEMS.TEXT)}
       >
-        <FaArrowRight />
+        <FaFont />
       </div>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "F",
+          [classes.active]: activeToolItem === TOOL_ITEMS.BRUSH,
         })}
-        onClick={() => setActiveToolItem("F")}
+        onClick={() => changeToolHandler(TOOL_ITEMS.BRUSH)}
       >
         <FaPaintBrush />
       </div>
@@ -55,15 +57,15 @@ const Toolbar = () => {
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === "G",
         })}
-        onClick={() => setActiveToolItem("G")}
+        onClick={() => changeToolHandler("G")}
       >
         <FaUndoAlt />
       </div>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "D",
+          [classes.active]: activeToolItem === TOOL_ITEMS.ERASER,
         })}
-        onClick={() => setActiveToolItem("D")}
+        onClick={() => changeToolHandler(TOOL_ITEMS.ERASER)}
       >
         <FaEraser />
       </div>

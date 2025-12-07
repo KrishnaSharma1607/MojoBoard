@@ -1,33 +1,71 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import rough from "roughjs";
+import BoardContext from "../../store/board-context"; // FIXED NAME
+import { TOOL_ACTION_TYPES } from "../../constants";
 
 function Board() {
   const canvasRef = useRef();
+
+  const {
+    elements,
+    boardMouseDownHandler,
+    boardMouseMoveHandler,
+    boardMouseUpHandler,
+    toolActionType,
+  } = useContext(BoardContext);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.save();
 
     let roughCanvas = rough.canvas(canvas);
-    let generator = roughCanvas.generator;
-    let rect1 = generator.rectangle(10, 10, 100, 100);
-    let rect2 = generator.rectangle(10, 120, 100, 100, { fill: "red" });
-    roughCanvas.draw(rect1);
-    roughCanvas.draw(rect2);
-  }, []);
+
+    elements.forEach((element) => {
+      roughCanvas.draw(element.roughEle);
+    });
+
+    return () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+  }, [elements]);
+
   const handleMouseDown = (event) => {
-    const canvas = canvasRef.current;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const clientX = event.clientX;
-    const clientY = event.clientY;
-    let roughCanvas = rough.canvas(canvas);
-    let generator = roughCanvas.generator;
-    let line1 = generator.line(0, 0, clientX, clientY);
-    roughCanvas.draw(line1);
+    boardMouseDownHandler(event);
   };
-  return <canvas ref={canvasRef} id="canvas" onMouseDown={handleMouseDown} />;
+
+  const handleMouseMove = (event) => {
+    if (toolActionType === TOOL_ACTION_TYPES.DRAWING)
+      boardMouseMoveHandler(event);
+  };
+
+  const handleMouseUp = () => {
+    boardMouseUpHandler();
+  };
+
+  return (
+    <>
+      {/* {toolActionType === TOOL_ACTION_TYPES.WRITING && <textarea 
+        type="text" 
+        style={{
+          top
+        }}
+      />} */}
+      <canvas
+        ref={canvasRef}
+        id="canvas"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+    </>
+  );
 }
 
 export default Board;
